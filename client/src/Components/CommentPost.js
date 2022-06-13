@@ -1,9 +1,9 @@
-import React, {  useState } from 'react';
-import {  Link , Navigate} from 'react-router-dom'
-import {Tabs, Tab, Form, FormControl, Row, Col, InputGroup, Button, Card} from 'react-bootstrap';
+import React from 'react';
+//import {  Link , Navigate} from 'react-router-dom'
+import {Form, Row, Col, Button} from 'react-bootstrap';
 import {useForm} from 'react-hook-form';
 import {MutationAddComment} from '../graphql/queries';
-import { useQuery, useMutation} from "@apollo/client";
+////////////////////////////////import { useQuery, useMutation} from "@apollo/client";
 
 
 const CommentPost = (props) => {
@@ -25,7 +25,7 @@ const CommentPost = (props) => {
             "text": text,
             "date":Date.now()
         };
-        const result = await MutationAddComment(post.comments, data);
+        /*const result =*/ await MutationAddComment(post.comments, data);
         
         //setMatchedUsers(data);
     }

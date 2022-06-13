@@ -10,18 +10,23 @@ import UserForm from './UserForm';
 import Search from './Search';
 //import PostBox from './Components/PostBox';
 import Account from './Page/Account';
+import CoinStatus from './Page/CoinStatus';
+import QAMain from './Page/QAMain';
+import QAPost from './Components/QAPost';
+import QAQuestion from './Page/QAQuestion';
+
 import {getUser} from './graphql/queries';
 import {getLoggedInUser, logout} from './auth';
-
-
+import {AppContext, defaultContext} from './AppContext';
 
 class App extends Component {
 
-  constructor(props) {
+  constructor(props){
     super(props);
+    
     this.state = {
       userId: getLoggedInUser(),
-      user:{}
+      user:null
     };
   }
 
@@ -29,15 +34,22 @@ class App extends Component {
     logout();
     this.setState({
       userId: null, 
-      user:{}
+      user:null
     });
   }
+
 
   async componentDidMount() {
     if(this.state.userId){
       console.log("componentDidMount: userId:"+this.state.userId)
       let user = await getUser(this.state.userId);
+      user = {
+        ...user,
+        userId : this.state.userId
+      }
       this.setState({user});
+
+      console.log("componentDidMount:user:"+user);
     }
   }
 
@@ -48,8 +60,16 @@ class App extends Component {
   }
 
   render() {
-    //const {loggedIn} = this.state;
+    if(AppContext===undefined) return("");
+
+    const context = {
+      EThProvider:defaultContext.EthProvider, 
+      EThSigner:defaultContext.EthSigner,
+      multiERC20Contract:defaultContext.multiERC20Contract,
+      user: this.state.user
+    }
     return (
+      <AppContext.Provider value={context}>
       <div>
         <Navbar bg="light" expand="lg">
           <Container>
@@ -77,6 +97,7 @@ class App extends Component {
           </Container>
         </Navbar>
                 
+        {this.state.user &&
         <div>
           <Routes>
             <Route path="/" exact element={<Account userId={this.state.userId}/>} />
@@ -84,9 +105,16 @@ class App extends Component {
             <Route path='login' element={<Login onLogin={this.onLogin.bind(this)}/>} />
             <Route path='register' element={<Register/>} />
             <Route path='user' element={<UserForm userId={this.state.userId}/>} />
+            <Route path='coin' element={<CoinStatus user={this.state.user} />} />
+            <Route path='qanew' element={<QAPost user={this.state.user} />} />
+            <Route path='qamine' element={<QAMain user={this.state.user} />} />
+            <Route path='qamain' element={<QAMain user={this.state.user} />} />
+            <Route path='qaquestion/:id' element={<QAQuestion user={this.state.user} />} />
           </Routes>
         </div>
+        }
       </div>
+      </AppContext.Provider>
     );
   }
 }

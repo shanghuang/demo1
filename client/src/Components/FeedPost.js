@@ -1,32 +1,32 @@
-import React, {  useState } from 'react';
-import {  Link , Navigate} from 'react-router-dom'
-import {Tabs, Tab, Form, FormControl, Row, Col, InputGroup, Button, Card} from 'react-bootstrap';
-import {useForm} from 'react-hook-form';
+import React from 'react';
+//import {  Link , Navigate} from 'react-router-dom'
+import {Card} from 'react-bootstrap';
+//import {useForm} from 'react-hook-form';
 import {QUERY_COMMENT} from '../graphql/queries';
-import { useQuery, useMutation} from "@apollo/client";
+import { useQuery} from "@apollo/client";
 import CommentPost from './CommentPost';
 import CommentView from './CommentView';
 
 const FeedPost = (props) => {
 
     const post = props.post;
-    const [matchedUsers, setMatchedUsers] = useState([]);
+    //const [matchedUsers, setMatchedUsers] = useState([]);
     //const [orderId, setOrderId] = useState(null);
 
-    const {register,   getValues, handleSubmit /*,formState : {errors}*/ } = useForm();
+    //const {register,   getValues, handleSubmit /*,formState : {errors}*/ } = useForm();
     //const [AddOrder/*, { orderData, orderUpdateLoading, orderUpdateError }*/] = useMutation(MUTATION_ADD_ORDER);
     const {  /*loading, error,*/ data} = useQuery(QUERY_COMMENT, {
         variables: { commentsId:post.comments },
     });
 
-    const onError = (errors, e) => console.log(errors, e);
+    //const onError = (errors, e) => console.log(errors, e);
 
     /*const Follow = async (event) => {
         let index = event.target.getAttribute('row_index');
         const followId = matchedUsers[index].id;
         const res = await MutationAddFollow(props.userId, followId);
     }*/
-    var postIsMine = props.userId && props.userId === props.post.user;
+    //var postIsMine = props.userId && props.userId === props.post.user;
 
     const api_server = "http://127.0.0.1:3000";
     const avatarPath = post.avatar ? api_server+'/avatar/50/' + post.avatar : `/img/avatar-none.jpg`

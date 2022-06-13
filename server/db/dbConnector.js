@@ -8,6 +8,8 @@ const { followSchema } = require('./schema/followSchema.js');
 const { postSchema } = require('./schema/postSchema.js');
 const { feedSchema } = require('./schema/feedSchema.js');
 const { commentsSchema, commentSchema } = require('./schema/commentSchema.js');
+const { qapostSchema } = require('./schema/qapostSchema.js');
+const { qaanswersSchema, qaanswerSchema } = require('./schema/qaanswerSchema.js');
 const env = process.env.NODE_ENV || "development";
 
 /**
@@ -32,4 +34,6 @@ const Follows = mongoose.model('Follows', followSchema);
 const Posts = mongoose.model('Posts', postSchema);
 const Feeds = mongoose.model('Feeds', feedSchema);
 const Comments = mongoose.model('Comments', commentsSchema);
-export { Friends, Series, Users, Orders, Follows, Posts, Feeds, Comments };
+const QAPosts = mongoose.model('QAPosts', qapostSchema);
+const QAAnswers = mongoose.model('QAAnswers', qaanswersSchema);
+export { Friends, Series, Users, Orders, Follows, Posts, Feeds, Comments, QAPosts, QAAnswers };

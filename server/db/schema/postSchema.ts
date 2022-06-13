@@ -18,7 +18,7 @@ exports.postSchema = new mongoose.Schema({
     date:{
         type: Date
     },
-    comments:{
-        type: ObjectID, ref: 'Comments' 
+    answers:{
+        type: ObjectID, ref: 'QAAnswers' 
     }
 });

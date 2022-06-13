@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 //import { BrowserRouter, Route, Link, Navigate } from 'react-router-dom';
-import {Form, Button} from 'react-bootstrap';
+import {Container, Form, Button} from 'react-bootstrap';
 //import FormGroup  from './Component/formgroup'
 //import validate from 'validate.js'
 import { updateUser} from './graphql/queries';
+import CoinRegister from './Components/CoinRegister';
+
 //import client from './graphql/client';
 
 class UserForm extends Component{
@@ -113,6 +115,7 @@ class UserForm extends Component{
     //var validateError = this.state.validateError;
 
     return(
+  <Container>
     <Form onSubmit={this.update}>
       <Form.Group controlid="email" size="lg">
         <Form.Label>Email</Form.Label>
@@ -160,7 +163,11 @@ class UserForm extends Component{
       <Button id="register-btn" variant="primary" type="submit">
         Update
       </Button>
-    </Form>
+  </Form>
+
+  <CoinRegister userId={this.props.userId}></CoinRegister>
+  
+</Container>
   );}
 }
 

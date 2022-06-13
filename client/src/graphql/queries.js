@@ -59,8 +59,22 @@ const userQuery = gql`
           password
           address
           phoneNumber
+          walletAddress
+          privateKey 
+          coinName
+          coinSymbol
         }
     }`;
+
+const userCoinQuery = gql`
+query queryUser($id:ID!) {
+  user:getUser(id:$id){
+      walletAddress
+      privateKey 
+      coinName
+      coinSymbol
+    }
+}`;
 
 export const QUERY_ORDER_BY_USER = gql`
     query queryOrderByUser($userId:ID!) {
@@ -96,6 +110,49 @@ export const QUERY_FEED = gql`
         }
     }`;
 
+export const QUERY_QA_QUESTION = gql`
+    query queryQAQuestion($pattern:String) {
+      questions:searchQAQuestions(pattern:$pattern){
+        id
+        user
+        text
+        image
+        date
+        answers
+        }
+    }`;
+
+export const QUERY_QA_QUESTION_BY_ID = gql`
+    query QueryQAQuestionById($id:ID) {
+      question:queryQAQuestionById(id:$id){
+        id
+        user
+        text
+        image
+        date
+        answers
+        }
+    }`;
+
+export const QUERY_QA_ANSWERS = gql`
+    query queryQAAnswers($answersId:ID) {
+      answers:getQAAnswers(answersId:$answersId){
+        id
+        user
+        text
+        image
+        date
+        }
+    }`;
+
+export async function queryQAAnswers(answersId){
+  const {data} = await client.query({
+    query: QUERY_QA_ANSWERS,
+    variables: {answersId: answersId}
+  });
+  return data;
+}
+
 export async function queryUserByKeyword(keyword){
   const {data} = await client.query({
     query: QUERY_USER_BY_KEYWORD,
@@ -123,6 +180,14 @@ export async function updateUser(id, user) {
 export async function getUser(id){
   const {data} = await client.query({
     query: userQuery,
+    variables: {id: id}
+  });
+  return data.user;
+}
+
+export async function getUserCoin(id){
+  const {data} = await client.query({
+    query: userCoinQuery,
     variables: {id: id}
   });
   return data.user;
@@ -175,6 +240,28 @@ export async function MutationAddPost(post){
   return data;
 }
 
+export const MUTATION_ADD_QAPOST = gql`
+  mutation createQAPostMut($post:QAPost){
+    result: addQAPost(post : $post)
+  }
+`;
+export async function MutationAddQAPost(post){ 
+  const {data} = await client.mutate({
+    mutation: MUTATION_ADD_QAPOST,
+    variables: {
+      post: post
+    }
+  });
+  return data;
+}
+
+export async function searchQAQuestions(id){
+  const {data} = await client.query({
+    query: QUERY_QA_QUESTION,
+    variables: {id: id}
+  });
+  return data;
+}
 
 export const MUTATION_ADD_COMMENT = gql`
   mutation createCommentMut($commentsId:ID!, $comment:Comment){
@@ -201,3 +288,42 @@ export const QUERY_COMMENT = gql`
           date
         }
     }`;
+
+
+export const MUTATION_UPDATE_COIN = gql`
+    mutation updateCoinMut($userId:ID!, $input:CoinInput){
+    result: updateUserCoin(userId:$userId, input : $input){
+          id
+        }
+    }`;
+
+export async function updateUserCoin(userId, input){ 
+  const {data} = await client.mutate({
+    mutation: MUTATION_UPDATE_COIN,
+    variables: {
+      userId: userId,
+      input: input
+    }
+  });
+  return data;
+}
+
+
+
+export const MUTATION_ADD_QAANSWER = gql`
+  mutation createQAAnswerMut($answersId:ID!, $answer:QAAnswer){
+    result: addQAAnswer(answersId:$answersId, answer : $answer)
+  }
+`;
+export async function MutationAddQAAnswerPost(answersId, answer){ 
+  const {data} = await client.mutate({
+    mutation: MUTATION_ADD_QAANSWER,
+    variables: {
+      answersId: answersId,
+      answer: answer
+    }
+  });
+  return data;
+}
+
+

@@ -33,4 +33,20 @@ exports.userSchema = new mongoose.Schema({
     introduction:{
         type: String
     },
+
+    walletAddress: {
+        type: String
+    },
+    
+    privateKey:{
+        type: String
+    },
+
+    coinName:{
+        type: String
+    },
+    
+    coinSymbol:{
+        type: String
+    },
 });

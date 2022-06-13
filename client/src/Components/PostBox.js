@@ -1,14 +1,14 @@
 import React, {  useState } from 'react';
-import {  Link , Navigate} from 'react-router-dom'
-import {Tabs, Tab, Form, FormControl, Row, Col, InputGroup, Button, Card} from 'react-bootstrap';
+//import {  Link , Navigate} from 'react-router-dom'
+import {Form, Button, Card} from 'react-bootstrap';
 import {useForm} from 'react-hook-form';
-import {queryUserByKeyword, MutationAddFollow, MutationAddPost} from '../graphql/queries';
-import { useQuery, useMutation} from "@apollo/client";
+import { MutationAddPost} from '../graphql/queries';
+//import { useQuery, useMutation} from "@apollo/client";
 
 
 const PostBox = (props) => {
 
-    const [matchedUsers, setMatchedUsers] = useState([]);
+    const [/*matchedUsers,*/ setMatchedUsers] = useState([]);
     //const [orderId, setOrderId] = useState(null);
 
     const {register,   getValues, handleSubmit /*,formState : {errors}*/ } = useForm();
@@ -21,7 +21,7 @@ const PostBox = (props) => {
             "text": text,
             "date":Date.now()
         };
-        const result = await MutationAddPost(data);
+        /*const result = */await MutationAddPost(data);
         
         setMatchedUsers(data);
     }

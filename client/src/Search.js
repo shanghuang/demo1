@@ -1,9 +1,9 @@
 import React, {  useState } from 'react';
-import {  Link , Navigate} from 'react-router-dom'
-import {Tabs, Tab, Form, FormControl, Row, Col, InputGroup, Button, Table} from 'react-bootstrap';
+//import {  Link , Navigate} from 'react-router-dom'
+import {Form, FormControl, Row, Col, InputGroup, Button, Table} from 'react-bootstrap';
 import {useForm} from 'react-hook-form';
 import {queryUserByKeyword, MutationAddFollow} from './graphql/queries';
-import { useQuery, useMutation} from "@apollo/client";
+//import { useQuery, useMutation} from "@apollo/client";
 
 /**
  * props:
@@ -37,7 +37,7 @@ const Search = (props) => {
     const Follow = async (event) => {
         let index = event.target.getAttribute('row_index');
         const followId = matchedUsers[index].id;
-        const res = await MutationAddFollow(props.userId, followId);
+        /*const res =*/ await MutationAddFollow(props.userId, followId);
     }
 
 	return(

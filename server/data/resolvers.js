@@ -1,4 +1,4 @@
-import {Friends,Series, Users, Orders, Follows, Posts, Feeds, Comments} from '../db/dbConnector.js'
+import {Friends,Series, Users, Orders, Follows, Posts, Feeds, Comments, QAPosts, QAAnswers } from '../db/dbConnector.js'
 import {encode_password} from '../src/util.js';
 
 /**
@@ -55,6 +55,17 @@ export const resolvers={
                     })
                 })
             },
+            /*getUserCoin:(root,{id})=>{
+                return new Promise((resolve,reject)=>{
+                    Users.findOne({_id:id},'walletAddress privateKey coinName coinSymbol', (err,user)=>{
+                        if(err) reject(err);
+                        else{ 
+                            resolve(user);
+                        }
+                    })
+                })
+            },*/
+
             getUserByKeyword:(root,{keyword})=>{
                 return new Promise((resolve,reject)=>{
                     Users.find({email:{ $regex: keyword }},(err,user)=>{
@@ -180,6 +191,54 @@ export const resolvers={
                 });
             },
 
+
+            searchQAQuestions:(root,{keyword})=>{
+                console.log("keyword:"+keyword);
+                return new Promise((resolve,reject)=>{
+                    let res = [];
+                    if(!keyword) 
+                        keyword = "";
+                    QAPosts.find({text:{'$regex' : keyword, '$options' : 'i'}}, null, {sort:{date:-1}}, async (err, questions) =>{
+                        if(err) reject(err);
+                        else{
+                            /*console.log("question:"+question);
+                            let resPosts = [];
+                            for(let i = 0; i < feeds.length; i++){
+                                const feed = feeds[i];
+                                console.log("feed:"+feed);
+                                const post = await Posts.findById(feed.post).exec();
+                                console.log("post:"+post);
+                                res.push(post);
+                            }*/
+                            resolve(questions);
+                        }
+                    });
+                })
+            },
+
+            queryQAQuestionById:(root,{id})=>{
+                console.log("queryQAQuestionById:"+id);
+                return new Promise((resolve,reject)=>{
+                    let res = [];
+                    QAPosts.findById(id, async (err, questions) =>{
+                        if(err) reject(err);
+                        else{
+                            resolve(questions);
+                        }
+                    });
+                })
+            },
+
+            getQAAnswers:(root,{answersId})=>{
+                console.log("answersId:"+answersId);
+                return new Promise(async (resolve,reject)=>{
+                    const res = await QAAnswers.findById(answersId).exec();
+                    if(res) resolve(res.answers);
+                    else reject("err");
+
+                });
+            },
+
     },
     Mutation:{
         createFriend: (root,{ input }) => {
@@ -242,6 +301,14 @@ export const resolvers={
                 })
             })
         },
+        updateUserCoin: (root,{ userId, input }) => {
+            const filter = {"id":userId};
+            const update = input;
+            //input.date = Date(input.date);
+            console.log("id:"+userId);
+            console.log(input);
+            return Users.findByIdAndUpdate(userId, update);
+        },
 
         createOrder: (root,{ input }) => {
             console.log(input);
@@ -301,6 +368,7 @@ export const resolvers={
                     console.log("post result:" + result );
                     if(err) reject(err);
                     else{ 
+                        //to do: move to another module to reduce dependency
                         const follows = await Follows.find({ followee: post.user});
                         console.log("follows:" + follows );
                         follows.forEach((follow) =>{
@@ -316,6 +384,29 @@ export const resolvers={
                         });
                         newComments.post = result._id;
                         let doc = await Comments.updateOne({_id:result.comments}, {post:result._id});
+                        resolve(true);
+                    }
+                })
+            });
+        },
+
+        addQAPost: async (root,{ post }) => {
+            
+            const newQAAnswers = new QAAnswers({
+                //post: post,
+                answers:[]
+            });
+            await newQAAnswers.save();
+            console.log("newQAAnswers"+newQAAnswers._id);
+            post.answers = newQAAnswers._id;
+            console.log("post:" + post );
+            console.log("post user:" + post.user );
+            const newPost=new QAPosts(post);
+            return new Promise((resolve,reject)=>{
+                newPost.save(async (err,result)=>{
+                    console.log("post result:" + result );
+                    if(err) reject(err);
+                    else{ 
                         resolve(true);
                     }
                 })
@@ -340,5 +431,25 @@ export const resolvers={
                 })
             });
         },
+
+        addQAAnswer: (root,{ answersId, answer }) => {
+            console.log("answersId:" + answersId );
+            console.log("answer userId:" + answer.userId );
+            console.log("answer text:" + answer.text );
+            
+            //const newComment=new Comment(comment);
+            return new Promise(async (resolve,reject)=>{
+                const QAAnswersOfAnswer = await QAAnswers.findById(answersId).exec();
+                QAAnswersOfAnswer.answers.push(answer)
+                QAAnswersOfAnswer.save(async (err,result)=>{
+                    console.log("save answer result:" + result );
+                    if(err) reject(err);
+                    else{ 
+                        resolve(true);
+                    }
+                })
+            });
+        },
+        //addQAAnswer(answersId:ID, answer:QAAnswer):Boolean
     },
 };

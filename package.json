@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/shanghuang/demo1/issues"
   },
-  "homepage": "https://github.com/shanghuang/demo1#readme"
+  "homepage": "https://github.com/shanghuang/demo1#readme",
+  "dependencies": {
+    "hardhat": "^2.9.3"
+  }
 }

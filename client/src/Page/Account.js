@@ -1,20 +1,21 @@
 import React, {  useState } from 'react';
-import {  Link , Navigate} from 'react-router-dom'
-import {Container, Row, Column, Form, FormControl, Col, InputGroup, Button, Card} from 'react-bootstrap';
+//import {  Link , Navigate} from 'react-router-dom'
+import {Container, Row, Col} from 'react-bootstrap';
 import {useForm} from 'react-hook-form';
-import {queryUserByKeyword, MutationAddFollow, MutationAddPost, QUERY_FEED} from '../graphql/queries';
-import { useQuery, useMutation} from "@apollo/client";
+import {MutationAddPost, QUERY_FEED} from '../graphql/queries';
+import { useQuery} from "@apollo/client";
 import InfiniteScroll from 'react-infinite-scroller';
 import PostBox from '../Components/PostBox';
 import FeedPost from '../Components/FeedPost';
+//import CoinRegister from '../Components/CoinRegister';
 
 const Account = (props) => {
 
-    const [matchedUsers, setMatchedUsers] = useState([]);
-    const [hasMorePost, setHasMorePost] = useState(false);
+    const [setMatchedUsers] = useState([]);
+    const [hasMorePost/*, setHasMorePost*/] = useState(false);
     //const [orderId, setOrderId] = useState(null);
 
-    const {register,   getValues, handleSubmit /*,formState : {errors}*/ } = useForm();
+    const {   getValues /*,formState : {errors}*/ } = useForm();
 
     const {  /*loading, error,*/ data} = useQuery(QUERY_FEED, {
         variables: { userId:props.userId },
@@ -29,12 +30,12 @@ const Account = (props) => {
             "text": text,
             "date":Date.now()
         };
-        const result = await MutationAddPost(data);
+        /*const result =*/ await MutationAddPost(data);
         
         setMatchedUsers(data);
     }
 
-    const onError = (errors, e) => console.log(errors, e);
+    //const onError = (errors, e) => console.log(errors, e);
 
     /*const Follow = async (event) => {
         let index = event.target.getAttribute('row_index');
@@ -58,6 +59,7 @@ const Account = (props) => {
   <Row>
     <Col md={2}>1 of 2</Col>
     <Col md={8}>
+
         <PostBox userId={props.userId}  key="postbox1" onAddPost={handleAddPost} showIcon={true}/>
 
 

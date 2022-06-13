@@ -28,6 +28,11 @@ export const typeDefs = gql`
        phoneNumber: String
        introduction:String
        contacts:[Contact]
+        walletAddress: String
+        privateKey : String
+        coinName: String
+        coinSymbol: String
+
     }
 
     input OrderInput{
@@ -122,6 +127,13 @@ export const typeDefs = gql`
         date:Date
     }
 
+    input QAPost{
+        user:ID
+        text:String
+        image:String
+        date:Date
+    }
+
     type PostOutput{
         id:ID
         user:ID
@@ -129,6 +141,33 @@ export const typeDefs = gql`
         image:String
         date:Date
         comments:ID
+    }
+
+    type QAQuestionOutput{
+        id:ID
+        user:ID
+        text:String
+        image:String
+        date:Date
+        answers:ID
+    }
+
+    input QAAnswer{
+        id:ID
+        user:ID
+        question:ID
+        text:String
+        image:String
+        date:Date
+    }
+
+    type QAAnswerOutput{
+        id:ID
+        user:ID
+        question:ID
+        text:String
+        image:String
+        date:Date
     }
 
     input Comment{
@@ -145,10 +184,25 @@ export const typeDefs = gql`
         date:Date
     }
 
+    input CoinInput{
+        walletAddress: String
+        privateKey : String
+        coinName: String
+        coinSymbol: String
+    }
+
+    type CoinOutput{
+        walletAddress: String
+        privateKey : String
+        coinName: String
+        coinSymbol: String
+    }
+
     type Query{
         getAllFriend:[Friend]
         findASeries(id:ID):Series
         getUser(id:ID):User
+        getUserCoin(id:ID):CoinOutput
         getPasswordVerify(id:ID,password:String):Boolean
         getOrder(id:ID):Order
         QueryOrderByFilter(filter:String,sort:String):[Order]
@@ -156,6 +210,9 @@ export const typeDefs = gql`
         getUserByKeyword(keyword:String):[User]
         getFeed(userId:ID, date:Date):[PostOutput]
         getComment(commentsId:ID, date:Date):[CommentOutput]
+        searchQAQuestions(pattern:String):[QAQuestionOutput]
+        queryQAQuestionById(id:ID):QAQuestionOutput
+        getQAAnswers(answersId:ID):[QAAnswerOutput]
     }
 
     type Mutation{
@@ -163,11 +220,14 @@ export const typeDefs = gql`
         addASeries(series:SeriesInput):Series
         createUser(input:UserInput):User
         updateUser(id:ID!, input:UserInput):User
+        updateUserCoin(userId:ID!, input:CoinInput):User
         createOrder(input:OrderInput):Order
         updateOrder(id:ID!, input:OrderInput):Order
         addFollow(follower:ID!, followee:ID!):Boolean
         addPost(post:Post):Boolean
         addComment(commentsId: ID!, comment:Comment):Boolean
+        addQAPost(post:QAPost):Boolean
+        addQAAnswer(answersId:ID, answer:QAAnswer):Boolean
     }
 
 `;
