@@ -102,3 +102,17 @@ dist
 
 # TernJS port file
 .tern-port
+
+#open zepplin
+./hardhat/artifacts
+./hardhat/cache
+./hardhat/node_modules
+./hardhat/scripts
+./hardhat/contract/audit
+./hardhat/contract/contract
+./hardhat/contract/docs
+./hardhat/contract/hardhat
+./hardhat/contract/migrations
+./hardhat/contract/openzeppelin-contracts
+./hardhat/contract/scripts
+./hardhat/contract/test
