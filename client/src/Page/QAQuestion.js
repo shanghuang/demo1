@@ -41,11 +41,15 @@ const QAQuestion =(props) => {
     const itemClicked = () => {};
 
 
+    const addAnswerCallback = () => {
+        
+    };
+
     if (loading ) return 'Loading...';
 
     return(
-<Container>
-    <QAPost viewonly="true"/>
+<Container id="qaQuestionPage">
+    <QAPost readonly="true" question={param.state}/>
 
     {data.answers && 
     <InfiniteScroll
@@ -56,7 +60,7 @@ const QAQuestion =(props) => {
             key="scroller1">
             {
                 data.answers.map( (answer, index) => {
-                    return (<QAAnswer horizontal onClick={() => itemClicked(index)} key={"answer"+index} />)
+                    return (<QAAnswer horizontal onClick={() => itemClicked(index)} key={"answer"+index} answer={answer}/>)
 
                 })
             }
@@ -64,7 +68,7 @@ const QAQuestion =(props) => {
     }
         
     {param.state &&    
-    <QAAnswerPost answersId={param.state.answers}/>
+    <QAAnswerPost answersId={param.state.answers} addAnswerCallback={addAnswerCallback}/>
     }
 
 </Container>

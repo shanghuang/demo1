@@ -50,7 +50,7 @@ const QAMain = (props) => {
         </Col>
         
         <Col xs="auto" className="my-1">
-        <Button type="submit" id="searchUser">Search</Button>
+        <Button type="submit" id="searchQuestionBtn">Search</Button>
         </Col>
     </Row>
     
@@ -65,7 +65,7 @@ const QAMain = (props) => {
         key="scroller1">
         {
             matchedQuestions.map( (question, index) => {
-                return (<ListGroup horizontal onClick={() => itemClicked(index)} key={"question"+index} >
+                return (<ListGroup horizontal onClick={() => itemClicked(index)} key={"question"+index} id={"questionIndex"+index}>
                             <ListGroup.Item>{index}</ListGroup.Item>
                             <ListGroup.Item>{question.text}</ListGroup.Item>
                             <ListGroup.Item>{question.text}</ListGroup.Item>

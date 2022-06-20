@@ -19,6 +19,8 @@ const QAAnswerPost = (props) => {
 
     const {register,   getValues, handleSubmit /*,formState : {errors}*/ } = useForm();
     //const [AddOrder/*, { orderData, orderUpdateLoading, orderUpdateError }*/] = useMutation(MUTATION_ADD_ORDER);
+
+    //todo: lift state up to QAQuestion
     const OnCreateAnswerPost = async (values, e) => {
         console.log(values, e);
         const text = getValues("PostAnswer");
@@ -30,6 +32,7 @@ const QAAnswerPost = (props) => {
         /*const result = */await MutationAddQAAnswerPost(props.answersId, data);
         
         //setMatchedUsers(data);
+        this.props.addAnswerCallback();
     }
 
     const onError = (errors, e) => console.log(errors, e);
@@ -47,13 +50,13 @@ const QAAnswerPost = (props) => {
     <Card.Img variant="top" src="holder.js/100px180" />
     <Card.Body>
         <Card.Title>Add answer!</Card.Title>
-        <Form.Control as="textarea" rows="3" name="address"  {...register("PostAnswer")}/>
+        <Form.Control as="textarea" rows="3" name="address" id="qaAnswerPostInput" {...register("PostAnswer")}/>
 
         
     </Card.Body>
 
     <Card.Footer>
-        <Button type="submit" id="postBtn">Post</Button>
+        <Button type="submit" id="postAnswerBtn">Post</Button>
     </Card.Footer>
 </Form>
 </Card>

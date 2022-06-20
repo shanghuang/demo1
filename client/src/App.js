@@ -97,7 +97,7 @@ class App extends Component {
           </Container>
         </Navbar>
                 
-        {this.state.user &&
+        {(this.state.user)? 
         <div>
           <Routes>
             <Route path="/" exact element={<Account userId={this.state.userId}/>} />
@@ -110,6 +110,14 @@ class App extends Component {
             <Route path='qamine' element={<QAMain user={this.state.user} />} />
             <Route path='qamain' element={<QAMain user={this.state.user} />} />
             <Route path='qaquestion/:id' element={<QAQuestion user={this.state.user} />} />
+          </Routes>
+        </div>
+        : 
+        <div>
+          <Routes>
+            <Route path="/" exact element={<Account userId={this.state.userId}/>} />
+            <Route path='login' element={<Login onLogin={this.onLogin.bind(this)}/>} />
+            <Route path='register' element={<Register/>} />
           </Routes>
         </div>
         }

@@ -40,8 +40,8 @@ const QAAnswer = (props) => {
 
     <Card.Img variant="top" src="holder.js/100px180" />
     <Card.Body>
-        <Card.Title>Card Title</Card.Title>
-        <Form.Control as="textarea" rows="3" name="address"  {...register("PostText")}/>
+        <Card.Title>Answer:</Card.Title>
+        <Form.Control as="textarea" rows="3" readOnly defaultValue={props.answer.text} name="address"  {...register("PostText")}/>
 
         
     </Card.Body>

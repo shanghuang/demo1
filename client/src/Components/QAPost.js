@@ -44,8 +44,8 @@ const QAPost = (props) => {
 
     <Card.Img variant="top" src="holder.js/100px180" />
     <Card.Body>
-        <Card.Title>Card Title</Card.Title>
-        <Form.Control as="textarea" rows="3" name="address"  {...register("PostText")}/>
+        <Card.Title>Question:</Card.Title>
+        <Form.Control as="textarea" id="questionInput" readOnly={props.readOnly} defaultValue={props.question?.text} rows="3" name="address"  {...register("PostText")}/>
 
         
     </Card.Body>
