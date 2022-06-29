@@ -10,6 +10,7 @@ const { feedSchema } = require('./schema/feedSchema.js');
 const { commentsSchema, commentSchema } = require('./schema/commentSchema.js');
 const { qapostSchema } = require('./schema/qapostSchema.js');
 const { qaanswersSchema, qaanswerSchema } = require('./schema/qaanswerSchema.js');
+const { qaAnswerScoresSchema,  qaAnswerScoreSchema} = require('./schema/qaAnswerScoreSchema.js');
 const env = process.env.NODE_ENV || "development";
 
 /**
@@ -36,4 +37,5 @@ const Feeds = mongoose.model('Feeds', feedSchema);
 const Comments = mongoose.model('Comments', commentsSchema);
 const QAPosts = mongoose.model('QAPosts', qapostSchema);
 const QAAnswers = mongoose.model('QAAnswers', qaanswersSchema);
-export { Friends, Series, Users, Orders, Follows, Posts, Feeds, Comments, QAPosts, QAAnswers };
+const QAAnswerScores = mongoose.model('QAAnswerScores', qaAnswerScoresSchema);
+export { Friends, Series, Users, Orders, Follows, Posts, Feeds, Comments, QAPosts, QAAnswers, QAAnswerScores };

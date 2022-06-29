@@ -154,7 +154,7 @@ export const typeDefs = gql`
 
     input QAAnswer{
         id:ID
-        user:ID
+        userId:ID
         question:ID
         text:String
         image:String
@@ -163,10 +163,27 @@ export const typeDefs = gql`
 
     type QAAnswerOutput{
         id:ID
-        user:ID
+        userId:ID
         question:ID
         text:String
         image:String
+        scoresId:ID
+        date:Date
+    }
+
+    input QAAnswerScore{
+        id:ID
+        userId:ID
+        score:Int
+        text:String
+        date:Date
+    }
+
+    type QAAnswerScoreOutput{
+        id:ID
+        userId:ID
+        score:Int
+        text:String
         date:Date
     }
 
@@ -227,7 +244,8 @@ export const typeDefs = gql`
         addPost(post:Post):Boolean
         addComment(commentsId: ID!, comment:Comment):Boolean
         addQAPost(post:QAPost):Boolean
-        addQAAnswer(answersId:ID, answer:QAAnswer):Boolean
+        addQAAnswer(answersId:ID, answer:QAAnswer):[QAAnswerOutput]
+        addQAAnswerScore(scoresId:ID, score:QAAnswerScore):[QAAnswerScoreOutput]
     }
 
 `;

@@ -17,7 +17,7 @@ const QAAnswerPost = (props) => {
     //const [/*matchedUsers,*/ setMatchedUsers] = useState([]);
     //const [orderId, setOrderId] = useState(null);
 
-    const {register,   getValues, handleSubmit /*,formState : {errors}*/ } = useForm();
+    const {register,   getValues, handleSubmit, setValue /*,formState : {errors}*/ } = useForm();
     //const [AddOrder/*, { orderData, orderUpdateLoading, orderUpdateError }*/] = useMutation(MUTATION_ADD_ORDER);
 
     //todo: lift state up to QAQuestion
@@ -25,14 +25,17 @@ const QAAnswerPost = (props) => {
         console.log(values, e);
         const text = getValues("PostAnswer");
         let data = {
-            "user" : props.userId,
+            "userId" : props.userId,
             "text": text,
             "date":Date.now()
         };
-        /*const result = */await MutationAddQAAnswerPost(props.answersId, data);
+        //
+        const newAnswer = await MutationAddQAAnswerPost(props.answersId, data);
         
         //setMatchedUsers(data);
-        this.props.addAnswerCallback();
+        props.addAnswerCallback(newAnswer?.result);
+
+        setValue("PostAnswer");
     }
 
     const onError = (errors, e) => console.log(errors, e);

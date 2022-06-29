@@ -1,4 +1,4 @@
-import {Friends,Series, Users, Orders, Follows, Posts, Feeds, Comments, QAPosts, QAAnswers } from '../db/dbConnector.js'
+import {Friends,Series, Users, Orders, Follows, Posts, Feeds, Comments, QAPosts, QAAnswers, QAAnswerScores } from '../db/dbConnector.js'
 import {encode_password} from '../src/util.js';
 
 /**
@@ -426,13 +426,23 @@ export const resolvers={
                     console.log("comment result:" + result );
                     if(err) reject(err);
                     else{ 
-                        resolve(true);
+                        resolve(result);
                     }
                 })
             });
         },
 
-        addQAAnswer: (root,{ answersId, answer }) => {
+        addQAAnswer: async (root,{ answersId, answer }) => {
+            const newScores = new QAAnswerScores({
+                //post: post,
+                scores:[]
+            });
+            newScores.totalscorer=0;
+            newScores.totalscore=0;
+            await newScores.save();
+            console.log("newScores"+newScores._id);
+            answer.scoresId = newScores._id;
+
             console.log("answersId:" + answersId );
             console.log("answer userId:" + answer.userId );
             console.log("answer text:" + answer.text );
@@ -445,11 +455,34 @@ export const resolvers={
                     console.log("save answer result:" + result );
                     if(err) reject(err);
                     else{ 
-                        resolve(true);
+                        resolve(result.answers);
                     }
                 })
             });
         },
-        //addQAAnswer(answersId:ID, answer:QAAnswer):Boolean
+        //addQAAnswerScore
+        addQAAnswerScore: (root,{ scoresId, score }) => {
+
+            console.log("scoresId:" + scoresId );
+            console.log("score:" + score.score );
+            console.log("score date:" + score.date );
+            console.log("score user:" + score.user );
+            
+            //const newComment=new Comment(comment);
+            return new Promise(async (resolve,reject)=>{
+                const scoresOfAnswer = await QAAnswerScores.findById(scoresId).exec();
+
+                scoresOfAnswer.totalscorer = scoresOfAnswer.totalscorer+1;
+                scoresOfAnswer.totalscore = scoresOfAnswer.totalscore + score.score;
+                scoresOfAnswer.scores.push(score)
+                scoresOfAnswer.save(async (err,result)=>{
+                    console.log("save score result:" + result );
+                    if(err) reject(err);
+                    else{ 
+                        resolve(result.scores);
+                    }
+                })
+            });
+        },
     },
 };

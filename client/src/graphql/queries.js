@@ -138,9 +138,10 @@ export const QUERY_QA_ANSWERS = gql`
     query queryQAAnswers($answersId:ID) {
       answers:getQAAnswers(answersId:$answersId){
         id
-        user
+        userId
         text
         image
+        scoresId
         date
         }
     }`;
@@ -312,7 +313,12 @@ export async function updateUserCoin(userId, input){
 
 export const MUTATION_ADD_QAANSWER = gql`
   mutation createQAAnswerMut($answersId:ID!, $answer:QAAnswer){
-    result: addQAAnswer(answersId:$answersId, answer : $answer)
+    result: addQAAnswer(answersId:$answersId, answer : $answer){
+      id
+      userId
+      text
+      date
+    }
   }
 `;
 export async function MutationAddQAAnswerPost(answersId, answer){ 
@@ -325,5 +331,28 @@ export async function MutationAddQAAnswerPost(answersId, answer){
   });
   return data;
 }
+
+export const MUTATION_ADD_QAANSWER_SCORE = gql`
+  mutation createQAAnsweScorerMut($scoresId:ID!, $score:QAAnswerScore){
+    result: addQAAnswerScore(scoresId:$scoresId, score : $score){
+      id
+      userId
+      score
+      date
+    }
+  }
+`;
+
+export async function MutationAddQAAnswerScore(scoresId, score){ 
+  const {data} = await client.mutate({
+    mutation: MUTATION_ADD_QAANSWER_SCORE,
+    variables: {
+      scoresId: scoresId,
+      score: score
+    }
+  });
+  return data;
+}
+
 
 

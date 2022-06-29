@@ -102,7 +102,14 @@ describe('example to-do app', () => {
 
         cy.get('#postAnswerBtn').click();
 
-    });
+        
+        cy.get('#answersScroller').should('be.visible');
+        
+        /*cy.get('#answersScroller :last-child textarea').then( ($selectedElement)=>{
+            debugger;
+        })*/
+        cy.get('#answersScroller :last-child textarea').should("have.value",testAnswerText);
+    });//last().
 
 })
 
