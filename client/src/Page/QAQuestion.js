@@ -37,8 +37,8 @@ const QAQuestion =(props) => {
         setAnswers(data?.answers);
     }, [data?.answers]);
 
-    const addAnswerCallback = useCallback((newAnswers) => {
-        //let newAnswers = [...answers, newAnswer];
+    const addAnswerCallback = useCallback((newAnswer) => {
+        let newAnswers = [...answers, newAnswer];
         setAnswers(newAnswers);
       }, [answers]);
 
@@ -64,7 +64,7 @@ const QAQuestion =(props) => {
             id="answersScroller">
             {
                 answers?.map( (answer, index) => {
-                    return (<QAAnswer horizontal onClick={() => itemClicked(index)} key={"answer"+index} answer={answer} viewer="true" userId={props.user.userId}/>)
+                    return (<QAAnswer horizontal onClick={() => itemClicked(index)} key={"answer"+index} answer={answer} viewer="true" userId={props.user.userId} answersId={param.state.answers}/>)
 
                 })
             }

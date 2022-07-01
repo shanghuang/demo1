@@ -19,21 +19,24 @@ const qaanswerSchema = new mongoose.Schema({
     scoresId:{
         //type : qaAnswerScoresSchema
         type: mongodb_1.ObjectID, ref: 'QAAnswerScores'
-    }
+    },
 
-    /*comments:{
-        type : [commentsSchema]
-    }*/
+    totalscorer: {
+        type: Number
+    },
+    totalscore: {
+        type: Number
+    }
 });
 
 
-const qaanswersSchema = new mongoose.Schema({
+const qaanswerSetSchema = new mongoose.Schema({
     post: {
         type: mongodb_1.ObjectID, ref: 'QAPosts'
     },
     answers: {
-        type: [qaanswerSchema]
+        type: [mongodb_1.ObjectID]
     },
 });
 
-export {qaanswerSchema, qaanswersSchema};
+export {qaanswerSchema, qaanswerSetSchema};

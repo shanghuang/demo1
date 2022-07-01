@@ -9,7 +9,7 @@ const { postSchema } = require('./schema/postSchema.js');
 const { feedSchema } = require('./schema/feedSchema.js');
 const { commentsSchema, commentSchema } = require('./schema/commentSchema.js');
 const { qapostSchema } = require('./schema/qapostSchema.js');
-const { qaanswersSchema, qaanswerSchema } = require('./schema/qaanswerSchema.js');
+const { qaanswerSetSchema, qaanswerSchema } = require('./schema/qaanswerSchema.js');
 const { qaAnswerScoresSchema,  qaAnswerScoreSchema} = require('./schema/qaAnswerScoreSchema.js');
 const env = process.env.NODE_ENV || "development";
 
@@ -36,6 +36,7 @@ const Posts = mongoose.model('Posts', postSchema);
 const Feeds = mongoose.model('Feeds', feedSchema);
 const Comments = mongoose.model('Comments', commentsSchema);
 const QAPosts = mongoose.model('QAPosts', qapostSchema);
-const QAAnswers = mongoose.model('QAAnswers', qaanswersSchema);
+const QAAnswerSet = mongoose.model('QAAnswerSet', qaanswerSetSchema);
+const QAAnswer = mongoose.model('QAAnswer', qaanswerSchema);
 const QAAnswerScores = mongoose.model('QAAnswerScores', qaAnswerScoresSchema);
-export { Friends, Series, Users, Orders, Follows, Posts, Feeds, Comments, QAPosts, QAAnswers, QAAnswerScores };
+export { Friends, Series, Users, Orders, Follows, Posts, Feeds, Comments, QAPosts, QAAnswerSet, QAAnswer, QAAnswerScores };

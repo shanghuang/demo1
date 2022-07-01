@@ -23,7 +23,7 @@ const QAAnswer = (props) => {
             "score":parseInt(score, 10),
             "date":Date.now()
         };
-        /*const result = */await MutationAddQAAnswerScore(props.answer?.scoresId, data);
+        /*const result = */await MutationAddQAAnswerScore(props.answer?.scoresId, props.answersId, props.answer?.id, data);
         
         //setMatchedUsers(data);
     }

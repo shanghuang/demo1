@@ -244,8 +244,8 @@ export const typeDefs = gql`
         addPost(post:Post):Boolean
         addComment(commentsId: ID!, comment:Comment):Boolean
         addQAPost(post:QAPost):Boolean
-        addQAAnswer(answersId:ID, answer:QAAnswer):[QAAnswerOutput]
-        addQAAnswerScore(scoresId:ID, score:QAAnswerScore):[QAAnswerScoreOutput]
+        addQAAnswer(answersId:ID, answer:QAAnswer):QAAnswerOutput
+        addQAAnswerScore(scoresId:ID, answersId:ID, answerId:ID, score:QAAnswerScore):[QAAnswerScoreOutput]
     }
 
 `;

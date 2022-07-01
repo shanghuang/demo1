@@ -1,4 +1,4 @@
-import {Friends,Series, Users, Orders, Follows, Posts, Feeds, Comments, QAPosts, QAAnswers, QAAnswerScores } from '../db/dbConnector.js'
+import {Friends,Series, Users, Orders, Follows, Posts, Feeds, Comments, QAPosts, QAAnswer, QAAnswerSet, QAAnswerScores } from '../db/dbConnector.js'
 import {encode_password} from '../src/util.js';
 
 /**
@@ -232,8 +232,17 @@ export const resolvers={
             getQAAnswers:(root,{answersId})=>{
                 console.log("answersId:"+answersId);
                 return new Promise(async (resolve,reject)=>{
-                    const res = await QAAnswers.findById(answersId).exec();
-                    if(res) resolve(res.answers);
+                    const answerIds = await QAAnswerSet.findById(answersId).exec();
+                    if(answerIds){ 
+                        console.log("answer IDs :"+answerIds.answers);
+                        let res = [];
+                        for(let i=0;i<answerIds.answers.length; i++){
+                            let ans = await QAAnswer.findById(answerIds.answers[i]).exec();
+                            res = [...res, ans];
+                        }
+                        console.log("answers :"+res);
+                        resolve(res);
+                    }
                     else reject("err");
 
                 });
@@ -392,7 +401,7 @@ export const resolvers={
 
         addQAPost: async (root,{ post }) => {
             
-            const newQAAnswers = new QAAnswers({
+            const newQAAnswers = new QAAnswerSet({
                 //post: post,
                 answers:[]
             });
@@ -446,22 +455,27 @@ export const resolvers={
             console.log("answersId:" + answersId );
             console.log("answer userId:" + answer.userId );
             console.log("answer text:" + answer.text );
-            
+            answer.totalscorer=0;
+            answer.totalscore=0;
+            let newAnswer = new QAAnswer(answer);
+            await newAnswer.save();
             //const newComment=new Comment(comment);
             return new Promise(async (resolve,reject)=>{
-                const QAAnswersOfAnswer = await QAAnswers.findById(answersId).exec();
-                QAAnswersOfAnswer.answers.push(answer)
+                const QAAnswersOfAnswer = await QAAnswerSet.findById(answersId).exec();
+                //QAAnswersOfAnswer.answers.push(answer)
+                QAAnswersOfAnswer.answers.push(newAnswer.id);
                 QAAnswersOfAnswer.save(async (err,result)=>{
                     console.log("save answer result:" + result );
                     if(err) reject(err);
                     else{ 
-                        resolve(result.answers);
+                        console.log("new answer :" + newAnswer );
+                        resolve(newAnswer);
                     }
                 })
             });
         },
         //addQAAnswerScore
-        addQAAnswerScore: (root,{ scoresId, score }) => {
+        addQAAnswerScore: (root,{ scoresId, answersId, answerId, score }) => {
 
             console.log("scoresId:" + scoresId );
             console.log("score:" + score.score );
@@ -475,13 +489,53 @@ export const resolvers={
                 scoresOfAnswer.totalscorer = scoresOfAnswer.totalscorer+1;
                 scoresOfAnswer.totalscore = scoresOfAnswer.totalscore + score.score;
                 scoresOfAnswer.scores.push(score)
-                scoresOfAnswer.save(async (err,result)=>{
-                    console.log("save score result:" + result );
-                    if(err) reject(err);
-                    else{ 
-                        resolve(result.scores);
+                const result = await scoresOfAnswer.save();
+                console.log("save score result:" + result );
+
+                console.log("answerId:" + answerId );
+                const answer = await QAAnswer.findById(answerId).exec();
+                console.log("answer:" + answer );
+                if(!answer){
+                    reject("err");
+                }
+                else{
+                    if(answer.totalscorer === undefined){
+                        answer.totalscorer = 0;
+                        answer.totalscore = 0;
                     }
-                })
+                    answer.totalscorer = answer.totalscorer+1;
+                    answer.totalscore = answer.totalscore + score.score;
+                    answer.save(async (err,result)=>{
+                        console.log("save score result:" + result );
+                        if(err) reject(err);
+                        else{ 
+                            resolve(result.scores);
+                        }
+                    });
+                }
+                //const answer = await QAAnswers.findById(answersId).exec();
+                /*const res = await QAAnswerSet.findById(answersId).exec();
+                console.log("answers:" + res );
+                if(!res){
+                    reject("err");
+                }
+                else{
+                    let index = res.answers.findIndex(x=>x.id==answerId);
+                    if(index < 0){ 
+                        reject("err");
+                    }
+                    else{
+                        res.answers[index].totalscorer = res.answers[index].totalscorer+1;
+                        res.answers[index].totalscore = res.answers[index].totalscore + score.score;
+                        res.save(async (err,result)=>{
+                            console.log("save score result:" + result );
+                            if(err) reject(err);
+                            else{ 
+                                resolve(result.scores);
+                            }
+                        });
+                    }
+                }*/
             });
         },
     },

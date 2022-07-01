@@ -333,8 +333,8 @@ export async function MutationAddQAAnswerPost(answersId, answer){
 }
 
 export const MUTATION_ADD_QAANSWER_SCORE = gql`
-  mutation createQAAnsweScorerMut($scoresId:ID!, $score:QAAnswerScore){
-    result: addQAAnswerScore(scoresId:$scoresId, score : $score){
+  mutation createQAAnsweScorerMut($scoresId:ID!, $answersId:ID!, $answerId:ID!, $score:QAAnswerScore){
+    result: addQAAnswerScore(scoresId:$scoresId, answersId: $answersId, answerId:$answerId, score : $score){
       id
       userId
       score
@@ -343,11 +343,13 @@ export const MUTATION_ADD_QAANSWER_SCORE = gql`
   }
 `;
 
-export async function MutationAddQAAnswerScore(scoresId, score){ 
+export async function MutationAddQAAnswerScore(scoresId, answersId, answerId, score){ 
   const {data} = await client.mutate({
     mutation: MUTATION_ADD_QAANSWER_SCORE,
     variables: {
       scoresId: scoresId,
+      answersId: answersId,
+      answerId: answerId,
       score: score
     }
   });
