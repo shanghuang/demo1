@@ -21,10 +21,10 @@ var qaanswerSchema = new mongoose.Schema({
         //type : qaAnswerScoresSchema
         type: mongodb_1.ObjectID, ref: 'QAAnswerScores'
     },
-    totalscorer: {
+    totalScorer: {
         type: Number
     },
-    totalscore: {
+    totalScore: {
         type: Number
     }
 });

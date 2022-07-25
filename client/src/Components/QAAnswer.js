@@ -8,7 +8,8 @@ import { MutationAddQAAnswerScore} from '../graphql/queries';
 
 const QAAnswer = (props) => {
 
-    const [/*matchedUsers,*/ setMatchedUsers] = useState([]);
+    //const [/*matchedUsers,*/ setMatchedUsers] = useState([]);
+    const [answer, setAnswer] = useState(props.answer);
     //const [orderId, setOrderId] = useState(null);
 
     const {register,   getValues, handleSubmit /*,formState : {errors}*/ } = useForm();
@@ -23,18 +24,19 @@ const QAAnswer = (props) => {
             "score":parseInt(score, 10),
             "date":Date.now()
         };
-        /*const result = */await MutationAddQAAnswerScore(props.answer?.scoresId, props.answersId, props.answer?.id, data);
+        const result = await MutationAddQAAnswerScore(answer?.scoresId, props.answersId, answer?.id, data);
         
+        console.log(result);
+        setAnswer(result.result);
         //setMatchedUsers(data);
     }
 
     const onError = (errors, e) => console.log(errors, e);
 
-    /*const Follow = async (event) => {
-        let index = event.target.getAttribute('row_index');
-        const followId = matchedUsers[index].id;
-        const res = await MutationAddFollow(props.userId, followId);
-    }*/
+    let averageScore = 0;
+    if(answer && answer.totalScorer){
+        averageScore = answer.totalScore / answer.totalScorer;
+    }
 
 	return(
 <Card style={{ width: '32rem' }} >
@@ -43,16 +45,20 @@ const QAAnswer = (props) => {
     <Card.Img variant="top" src="holder.js/100px180" />
     <Card.Body>
         <Card.Title>Answer:</Card.Title>
-        <Form.Control as="textarea" rows="3" readOnly defaultValue={props.answer.text} name="address"  {...register("PostText")}/>
+        <Form.Control as="textarea" rows="3" readOnly defaultValue={answer.text} name="address"  {...register("PostText")}/>
     </Card.Body>
 
     <Card.Footer>
         <Row>
             <Col>
-                <Form.Range value={props.answer.prevScore} min="1" max="10" name="score"  {...register("Score")}/>
+                <Form.Range value={answer.prevScore} min="1" max="10" name="score" id="rangeAnswer" {...register("Score")}/>
             </Col>
             <Col>
-                <Button type="submit" id="postBtn">Score</Button>
+                <p >Averave score:{averageScore}</p>
+                <p >Score count:{answer?.totalScorer}</p>
+            </Col>
+            <Col>
+                <Button type="submit" id="postRangeBtn">Score</Button>
             </Col>
         </Row>
     </Card.Footer>

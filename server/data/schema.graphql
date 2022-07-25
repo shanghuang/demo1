@@ -150,6 +150,7 @@ export const typeDefs = gql`
         image:String
         date:Date
         answers:ID
+
     }
 
     input QAAnswer{
@@ -169,6 +170,8 @@ export const typeDefs = gql`
         image:String
         scoresId:ID
         date:Date
+        totalScore:Int
+        totalScorer:Int
     }
 
     input QAAnswerScore{
@@ -238,14 +241,15 @@ export const typeDefs = gql`
         createUser(input:UserInput):User
         updateUser(id:ID!, input:UserInput):User
         updateUserCoin(userId:ID!, input:CoinInput):User
+        updateUserWallet(userId:ID!, input:CoinInput):User
         createOrder(input:OrderInput):Order
         updateOrder(id:ID!, input:OrderInput):Order
         addFollow(follower:ID!, followee:ID!):Boolean
         addPost(post:Post):Boolean
         addComment(commentsId: ID!, comment:Comment):Boolean
-        addQAPost(post:QAPost):Boolean
+        addQAPost(post:QAPost):ID
         addQAAnswer(answersId:ID, answer:QAAnswer):QAAnswerOutput
-        addQAAnswerScore(scoresId:ID, answersId:ID, answerId:ID, score:QAAnswerScore):[QAAnswerScoreOutput]
+        addQAAnswerScore(scoresId:ID, answersId:ID, answerId:ID, score:QAAnswerScore):QAAnswerOutput
     }
 
 `;

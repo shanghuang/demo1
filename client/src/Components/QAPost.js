@@ -1,9 +1,14 @@
-import React, {  useState } from 'react';
+import React, {  useState, useContext } from 'react';
 //import {  Link , Navigate} from 'react-router-dom'
 import {Form, Button, Card} from 'react-bootstrap';
 import {useForm} from 'react-hook-form';
 import { MutationAddQAPost} from '../graphql/queries';
-//import { useQuery, useMutation} from "@apollo/client";
+
+//
+import QARewardContract from "../contracts/QAReward.json";
+import {ethers} from 'ethers';
+import {getQARewardContract} from "../EthLib";
+import {AppContext} from '../AppContext';
 
 /*
     .provide premium for solution provider
@@ -12,6 +17,7 @@ import { MutationAddQAPost} from '../graphql/queries';
 
 const QAPost = (props) => {
 
+    const context = useContext(AppContext);
     const [/*matchedUsers,*/ setMatchedUsers] = useState([]);
     //const [orderId, setOrderId] = useState(null);
 
@@ -25,9 +31,39 @@ const QAPost = (props) => {
             "text": text,
             "date":Date.now()
         };
-        /*const result = */await MutationAddQAPost(data);
+        const result = await MutationAddQAPost(data);
         
         //setMatchedUsers(data);
+
+        
+
+        //QARewardContract
+        const interval = 7 ;
+        let targetDate = new Date();
+        targetDate.setDate(targetDate.getDate()+interval);
+
+        const balance = await context.EThProvider.getBalance(props.user.walletAddress);
+        console.log("balance:", balance);
+        //const signerOfUser = context.EThProvider.getSigner( props.user.walletAddress );
+        let wallet = new ethers.Wallet(props.user.privateKey, context.EThProvider);
+
+        
+
+        //const qareward = getQARewardContract(wallet);//signerOfUser);
+        const qareward = context.qarewardContract;
+        const name1 = await qareward.name();
+        console.log("name:", name1);
+
+        const questionId = result.result;
+        console.log("questionId:", typeof(questionId), questionId);
+
+        const tx = await qareward.proposeAward(questionId, targetDate.valueOf(), {value:1000 });
+        console.log("transaction hash:", tx.hash);
+        await tx.wait();
+
+        
+        let awardGet = await qareward.getProposeAward(questionId);
+        console.log("awardGet:", result, ",",  awardGet);
     }
 
     const onError = (errors, e) => console.log(errors, e);

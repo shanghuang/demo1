@@ -18,6 +18,7 @@ import QAQuestion from './Page/QAQuestion';
 import {getUser} from './graphql/queries';
 import {getLoggedInUser, logout} from './auth';
 import {AppContext, defaultContext} from './AppContext';
+import {getQARewardContractByKey} from './EthLib';
 
 class App extends Component {
 
@@ -49,6 +50,16 @@ class App extends Component {
       }
       this.setState({user});
 
+      if(user?.privateKey){
+        const qarewardContract = getQARewardContractByKey(user?.privateKey, defaultContext.EthProvider);
+        qarewardContract.on("AwardSent", (receiver, sender, amount, event) => {  
+          //console.log(event)
+          console.log("sender:",sender, " receiver:", receiver, " amount:", amount);
+        });
+        
+
+        this.setState({qarewardContract});
+      }
       console.log("componentDidMount:user:"+user);
     }
   }
@@ -59,15 +70,24 @@ class App extends Component {
 	  this.setState({user, userId});
   }
 
+  //todo : move qarewardContract to context
   render() {
     if(AppContext===undefined) return("");
+
+    /*let qarewardContract = undefined;
+    if(this.state.user?.privateKey){
+      qarewardContract = getQARewardContractByKey(this.state.user?.privateKey, defaultContext.EthProvider);
+    }*/
 
     const context = {
       EThProvider:defaultContext.EthProvider, 
       EThSigner:defaultContext.EthSigner,
       multiERC20Contract:defaultContext.multiERC20Contract,
+      //qarewardContract:qarewardContract,//defaultContext.QARewardContract,
+      qarewardContract:this.state.qarewardContract,
       user: this.state.user
     }
+
     return (
       <AppContext.Provider value={context}>
       <div>

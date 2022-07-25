@@ -4,7 +4,7 @@ import {Container, Form, Button} from 'react-bootstrap';
 //import FormGroup  from './Component/formgroup'
 //import validate from 'validate.js'
 import { updateUser} from './graphql/queries';
-import CoinRegister from './Components/CoinRegister';
+import Wallet from './Components/Wallet';
 
 //import client from './graphql/client';
 
@@ -165,10 +165,13 @@ class UserForm extends Component{
       </Button>
   </Form>
 
-  <CoinRegister userId={this.props.userId}></CoinRegister>
+  <Wallet userId={this.props.userId}></Wallet>
   
 </Container>
   );}
 }
 
 export default UserForm;
+
+
+//<CoinRegister userId={this.props.userId}></CoinRegister>

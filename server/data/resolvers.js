@@ -319,6 +319,15 @@ export const resolvers={
             return Users.findByIdAndUpdate(userId, update);
         },
 
+        updateUserWallet: (root,{ userId, input }) => {
+            const filter = {"id":userId};
+            const update = input;
+            //input.date = Date(input.date);
+            console.log("id:"+userId);
+            console.log(input);
+            return Users.findByIdAndUpdate(userId, update);
+        },
+
         createOrder: (root,{ input }) => {
             console.log(input);
             const newOrder=new Orders({
@@ -416,7 +425,7 @@ export const resolvers={
                     console.log("post result:" + result );
                     if(err) reject(err);
                     else{ 
-                        resolve(true);
+                        resolve(result.id);
                     }
                 })
             });
@@ -446,8 +455,8 @@ export const resolvers={
                 //post: post,
                 scores:[]
             });
-            newScores.totalscorer=0;
-            newScores.totalscore=0;
+            newScores.totalScorer=0;
+            newScores.totalScore=0;
             await newScores.save();
             console.log("newScores"+newScores._id);
             answer.scoresId = newScores._id;
@@ -455,8 +464,8 @@ export const resolvers={
             console.log("answersId:" + answersId );
             console.log("answer userId:" + answer.userId );
             console.log("answer text:" + answer.text );
-            answer.totalscorer=0;
-            answer.totalscore=0;
+            answer.totalScorer=0;
+            answer.totalScore=0;
             let newAnswer = new QAAnswer(answer);
             await newAnswer.save();
             //const newComment=new Comment(comment);
@@ -486,8 +495,8 @@ export const resolvers={
             return new Promise(async (resolve,reject)=>{
                 const scoresOfAnswer = await QAAnswerScores.findById(scoresId).exec();
 
-                scoresOfAnswer.totalscorer = scoresOfAnswer.totalscorer+1;
-                scoresOfAnswer.totalscore = scoresOfAnswer.totalscore + score.score;
+                scoresOfAnswer.totalScorer = scoresOfAnswer.totalScorer+1;
+                scoresOfAnswer.totalScore = scoresOfAnswer.totalScore + score.score;
                 scoresOfAnswer.scores.push(score)
                 const result = await scoresOfAnswer.save();
                 console.log("save score result:" + result );
@@ -499,43 +508,20 @@ export const resolvers={
                     reject("err");
                 }
                 else{
-                    if(answer.totalscorer === undefined){
-                        answer.totalscorer = 0;
-                        answer.totalscore = 0;
+                    if(answer.totalScorer === undefined){
+                        answer.totalScorer = 0;
+                        answer.totalScore = 0;
                     }
-                    answer.totalscorer = answer.totalscorer+1;
-                    answer.totalscore = answer.totalscore + score.score;
+                    answer.totalScorer = answer.totalScorer+1;
+                    answer.totalScore = answer.totalScore + score.score;
                     answer.save(async (err,result)=>{
                         console.log("save score result:" + result );
                         if(err) reject(err);
                         else{ 
-                            resolve(result.scores);
+                            resolve(result);
                         }
                     });
                 }
-                //const answer = await QAAnswers.findById(answersId).exec();
-                /*const res = await QAAnswerSet.findById(answersId).exec();
-                console.log("answers:" + res );
-                if(!res){
-                    reject("err");
-                }
-                else{
-                    let index = res.answers.findIndex(x=>x.id==answerId);
-                    if(index < 0){ 
-                        reject("err");
-                    }
-                    else{
-                        res.answers[index].totalscorer = res.answers[index].totalscorer+1;
-                        res.answers[index].totalscore = res.answers[index].totalscore + score.score;
-                        res.save(async (err,result)=>{
-                            console.log("save score result:" + result );
-                            if(err) reject(err);
-                            else{ 
-                                resolve(result.scores);
-                            }
-                        });
-                    }
-                }*/
             });
         },
     },

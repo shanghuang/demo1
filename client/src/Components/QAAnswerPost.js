@@ -1,8 +1,9 @@
-import React, {  useState } from 'react';
+import React, {  useState, useContext } from 'react';
 //import {  Link , Navigate} from 'react-router-dom'
 import {Form, Button, Card} from 'react-bootstrap';
 import {useForm} from 'react-hook-form';
 import { MutationAddQAAnswerPost} from '../graphql/queries';
+import {AppContext} from '../AppContext';
 //import { useQuery, useMutation} from "@apollo/client";
 
 /*
@@ -16,7 +17,7 @@ const QAAnswerPost = (props) => {
 
     //const [/*matchedUsers,*/ setMatchedUsers] = useState([]);
     //const [orderId, setOrderId] = useState(null);
-
+    const context = useContext(AppContext);
     const {register,   getValues, handleSubmit, setValue /*,formState : {errors}*/ } = useForm();
     //const [AddOrder/*, { orderData, orderUpdateLoading, orderUpdateError }*/] = useMutation(MUTATION_ADD_ORDER);
 
@@ -26,6 +27,7 @@ const QAAnswerPost = (props) => {
         const text = getValues("PostAnswer");
         let data = {
             "userId" : props.userId,
+            //"walletAddress" : context?.user?.walletAddress,
             "text": text,
             "date":Date.now()
         };

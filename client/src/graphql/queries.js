@@ -142,6 +142,8 @@ export const QUERY_QA_ANSWERS = gql`
         text
         image
         scoresId
+        totalScore
+        totalScorer
         date
         }
     }`;
@@ -309,6 +311,23 @@ export async function updateUserCoin(userId, input){
   return data;
 }
 
+export const MUTATION_UPDATE_WALLET = gql`
+    mutation updateWalletMut($userId:ID!, $input:CoinInput){
+    result: updateUserWallet(userId:$userId, input : $input){
+          id
+        }
+    }`;
+
+export async function updateUserWallet(userId, input){ 
+  const {data} = await client.mutate({
+    mutation: MUTATION_UPDATE_WALLET,
+    variables: {
+      userId: userId,
+      input: input
+    }
+  });
+  return data;
+}
 
 
 export const MUTATION_ADD_QAANSWER = gql`
@@ -317,6 +336,10 @@ export const MUTATION_ADD_QAANSWER = gql`
       id
       userId
       text
+      image
+      scoresId
+      totalScore
+      totalScorer
       date
     }
   }
@@ -337,8 +360,13 @@ export const MUTATION_ADD_QAANSWER_SCORE = gql`
     result: addQAAnswerScore(scoresId:$scoresId, answersId: $answersId, answerId:$answerId, score : $score){
       id
       userId
-      score
+      question
+      text
+      image
+      scoresId
       date
+      totalScore
+      totalScorer
     }
   }
 `;
